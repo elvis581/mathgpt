@@ -1,0 +1,406 @@
+:root {
+    --primary-color: #2196F3;
+    --text-color: #333;
+    --bg-color: #fff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #eee;
+}
+
+.app-banner {
+    background-color: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.hero-section {
+    max-width: 1200px;
+    margin: 3rem auto;
+    text-align: center;
+    padding: 0 1rem;
+}
+
+.hero-logo {
+    width: 80px;
+    margin-bottom: 1rem;
+}
+
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.tab {
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+.tab.active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.tab:not(.active) {
+    background-color: #f0f0f0;
+    color: var(--text-color);
+}
+
+.tab:hover:not(.active) {
+    border: 1px solid var(--primary-color);
+}
+
+.upload-box {
+    max-width: 800px;
+    margin: 2rem auto;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 2rem;
+}
+
+.input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+}
+
+.question-input {
+    width: 100%;
+    padding: 1rem;
+    padding-right: 4.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.image-caption {
+    display: block;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 1.5rem;
+    }
+
+    .article-title {
+        font-size: 1.75rem;
+    }
+
+    .article-content {
+        font-size: 1rem;
+    }
+}
+
+/* Logo 样式 */
+.logo {
+    height: 40px;
+    width: auto;
+}
+
+.hero-section h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #1a1a1a;
+    line-height: 1;
+}
+
+.hero-section .highlight {
+    color: var(--primary-color) !important;
+    display: block !important;
+    margin-bottom: -0.2rem !important;
+}
+
+.hero-section h1 br + span {
+    font-size: 2.4rem;
+    color: #333;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+}
+
+.footer-links a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.disclaimer {
+    color: #666;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.blog-section {
+    padding: 4rem 0;
+    background-color: #fff;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.blog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.blog-article {
+    background: #fff;
+    border-radius: 8px;
+    padding: 2rem 0;
+}
+
+.article-title {
+    font-size: 2rem;
+    color: #1a1a1a;
+    margin-bottom: 1.5rem;
+}
+
+.article-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+}
+
+.article-intro {
+    font-size: 1.2rem;
+    color: #444;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.article-description {
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.article-note {
+    background-color: #f0f7ff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.article-note strong {
+    color: var(--primary-color);
+}
+
+.article-subtitle {
+    font-size: 1.5rem;
+    margin: 2.5rem 0 1rem;
+    color: #333;
+    position: relative;
+    padding-left: 1rem;
+}
+
+.article-subtitle::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 24px;
+    background-color: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* 列表样式 */
+.article-content ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+}
+
+.article-content li {
+    margin-bottom: 0.5rem;
+    color: #444;
+}
+
+/* 文章图片样式 */
+.article-image {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.main-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 1rem 0;
+}
+
+.image-caption {
+    display: block;
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.feature-list {
+    margin: 2rem 0;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.feature-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    margin-bottom: 1rem;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #444;
+}
+
+.feature-list li::before {
+    content: "•";
+    color: var(--primary-color);
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+.guide-section {
+    margin: 2.5rem 0;
+    padding: 0 1rem;
+}
+
+.guide-section p {
+    margin-bottom: 1rem;
+    color: #444;
+}
+
+.guide-section ul {
+    list-style: none;
+    padding-left: 1.5rem;
+}
+
+.guide-section li {
+    margin-bottom: 1rem;
+    position: relative;
+    color: #555;
+}
+
+.guide-section li::before {
+    content: "•";
+    color: var(--primary-color);
+    position: absolute;
+    left: -1.5rem;
+    font-weight: bold;
+}
+
+.article-conclusion {
+    margin-top: 3rem;
+    padding: 2rem;
+    background-color: #f0f7ff;
+    border-radius: 8px;
+    color: #444;
+}
+
+.article-conclusion p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+.send-btn {
+    position: absolute;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.send-btn svg {
+    width: 28px;
+    height: 28px;
+    fill: white;
+    pointer-events: none;
+}
+
+.send-btn:hover {
+    background-color: #1976D2;
+}
+
+.chat-container {
+    margin-bottom: 1rem;
+    max-height: 400px;
+    overflow-y: auto;
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+}
+
+.message {
+    margin: 0.5rem 0;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+}
+
+.user-message {
+    background-color: #f0f7ff;
+    margin-left: auto;
+    margin-right: 0;
+    max-width: 80%;
+}
+
+.bot-message {
+    background-color: #f8f9fa;
+    margin-right: auto;
+    margin-left: 0;
+    max-width: 80%;
+} 
