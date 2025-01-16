@@ -391,18 +391,26 @@ footer {
     border-radius: 8px;
     padding: 0;
     width: 100%;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .message {
     margin: 0.5rem 0;
     padding: 1rem 1.5rem;
     border-radius: 8px;
+    position: relative;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    text-align: left;
 }
 
 .user-message {
     background-color: #f0f7ff;
-    margin-left: auto;
-    margin-right: 0;
+    margin-left: 0;
+    margin-right: auto;
     max-width: 80%;
 }
 
@@ -411,6 +419,54 @@ footer {
     margin-right: auto;
     margin-left: 0;
     max-width: 80%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    padding: 1.5rem 2rem;
+}
+
+.bot-message p {
+    margin: 0.5rem 0;
+}
+
+/* 数学公式样式 */
+.katex-display {
+    margin: 1rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* 步骤样式 */
+.bot-message ol {
+    counter-reset: steps;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.bot-message ol > li {
+    position: relative;
+    padding: 0 0 0 2rem;
+    margin: 1.5rem 0;
+}
+
+.bot-message ol > li::before {
+    counter-increment: steps;
+    content: counter(steps) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+/* 步骤标题样式 */
+.bot-message strong {
+    display: block;
+    color: #1a1a1a;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 }
 
 .nav-left {
@@ -551,4 +607,90 @@ header {
 /* 为固定页头腾出空间 */
 main {
     margin-top: 60px;  /* 根据页头高度调整 */
+}
+
+.loading {
+    position: relative;
+    min-height: 24px;
+}
+
+.loading::after {
+    content: "...";
+    position: absolute;
+    right: -12px;
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: "."; }
+    40%, 60% { content: ".."; }
+    80%, 100% { content: "..."; }
+}
+
+.message {
+    margin: 0.5rem 0;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    position: relative;
+}
+
+/* 数学公式样式 */
+.katex-display {
+    margin: 1rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.katex {
+    font-size: 1em;
+}
+
+/* 强调样式 */
+.bot-message strong {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.bot-message em {
+    font-style: italic;
+    color: #34495e;
+}
+
+/* 分隔线样式 */
+.bot-message hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 1.5rem 0;
+}
+
+/* 步骤样式 */
+.bot-message ol {
+    counter-reset: steps;
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.bot-message ol > li {
+    position: relative;
+    padding: 0 0 0 2rem;
+    margin: 1.5rem 0;
+}
+
+.bot-message ol > li::before {
+    counter-increment: steps;
+    content: counter(steps) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #1a1a1a;
+    font-weight: 600;
+}
+
+/* 步骤标题样式 */
+.bot-message strong {
+    display: block;
+    color: #1a1a1a;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
 } 

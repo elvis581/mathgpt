@@ -15,6 +15,9 @@
     </script>
     <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 </head>
 <body>
     <header>
@@ -223,6 +226,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const API_URL = 'https://api.chatanywhere.tech/v1/chat/completions';
+            const API_KEY = 'sk-mfeFE41QyBhcRHOpQF6YY5cdu1nacylyXh7lIRYP9jTXWTLP';
             const tabs = document.querySelectorAll('.tab');
             const questionInput = document.querySelector('.question-input');
             const sendButton = document.querySelector('.send-btn');
@@ -279,18 +284,121 @@
                 });
             });
 
-            function addMessage(content, isUser = false) {
+            function addMessage(content, isUser = false, isLoading = false) {
                 const messageDiv = document.createElement('div');
-                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
-                messageDiv.textContent = content;
+                messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'} ${isLoading ? 'loading' : ''}`;
+                
+                if (isUser) {
+                    messageDiv.textContent = content;
+                } else {
+                    try {
+                        const rendered = marked.parse(content);
+                        
+                        // 直接渲染所有 LaTeX 表达式
+                        const processedContent = rendered.replace(/\\[a-zA-Z]+{[^}]+}|\\[a-zA-Z]+/g, (match) => {
+                            try {
+                                return katex.renderToString(match, {
+                                    displayMode: true,
+                                    throwOnError: false
+                                });
+                            } catch (err) {
+                                console.error('KaTeX error:', err);
+                                return match;
+                            }
+                        });
+                        
+                        messageDiv.innerHTML = processedContent;
+                    } catch (error) {
+                        console.error('Rendering error:', error);
+                        messageDiv.textContent = content;
+                    }
+                }
                 chatContainer.appendChild(messageDiv);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+                return messageDiv;
             }
 
-            function handleSend() {
+            async function sendToGPT(question, imageUrl = null) {
+                const maxRetries = 3;
+                let retryCount = 0;
+                
+                while (retryCount < maxRetries) {
+                    try {
+                        console.log('Sending request to GPT...', { question, imageUrl });
+                        const response = await fetch(API_URL, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${API_KEY}`
+                            },
+                            body: JSON.stringify({
+                                model: "gpt-3.5-turbo",
+                                messages: [
+                                    {
+                                        role: "system",
+                                        content: `You are MathGPT, an AI math expert. Follow these formatting rules:
+                                                1. Start with "To solve this problem, we will follow the steps outlined:"
+                                                2. Number each step clearly
+                                                3. Write mathematical expressions directly in LaTeX format without $ symbols
+                                                4. Show all calculations step by step
+                                                5. Explain each step clearly
+                                                6. End with a clear conclusion
+                                                7. Example format:
+                                                   The function f(x) = x^2 + 2x + 1
+                                                   To solve, we use the quadratic formula:
+                                                   x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}`
+                                    },
+                                    {
+                                        role: "user",
+                                        content: question
+                                    }
+                                ],
+                                temperature: 0.7,
+                                max_tokens: 2000
+                            })
+                        });
+                        
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            const errorData = await response.text();
+                            console.error('API Error:', errorData);
+                            retryCount++;
+                            if (retryCount < maxRetries) {
+                                await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+                                continue;
+                            }
+                            throw new Error('API request failed');
+                        }
+                        
+                        const data = await response.json();
+                        console.log('API Response:', data);
+                        return data.choices[0].message.content;
+                    } catch (error) {
+                        console.error('Error details:', {
+                            message: error.message,
+                            stack: error.stack,
+                            retryCount
+                        });
+                        if (retryCount >= maxRetries - 1) {
+                            return 'Sorry, I encountered an error processing your request.';
+                        }
+                        retryCount++;
+                        await new Promise(resolve => setTimeout(resolve, 1000 * retryCount));
+                    }
+                }
+            }
+
+            async function handleSend() {
                 const question = questionInput.value.trim();
                 if (question || selectedFile) {
+                    console.log('Handling send...', { question, hasFile: !!selectedFile });
+                    let imageUrl = null;
                     if (selectedFile) {
+                        if (selectedFile.type.startsWith('image/')) {
+                            // 如果需要，先上传图片到服务器获取 URL
+                            imageUrl = URL.createObjectURL(selectedFile);
+                        }
+                        
                         // 创建一个包含文件预览的消息
                         const messageDiv = document.createElement('div');
                         messageDiv.className = 'message user-message';
@@ -312,16 +420,19 @@
                         }
                         
                         chatContainer.appendChild(messageDiv);
-                        selectedFile = null;  // 清除已发送的文件
                     } else {
                         addMessage(question, true);
                     }
                     
                     questionInput.value = '';
                     
-                    setTimeout(() => {
-                        addMessage('I am processing your question. Please wait...');
-                    }, 500);
+                    const loadingMessage = addMessage('Thinking...', false, true);
+                    
+                    // 发送到 GPT 并获取响应
+                    const response = await sendToGPT(question, imageUrl);
+                    console.log('Got response:', response);
+                    loadingMessage.remove();
+                    addMessage(response);
                 }
             }
 
