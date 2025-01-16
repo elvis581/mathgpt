@@ -20,36 +20,31 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 2rem;
+    padding: 0.15rem 1rem;
     border-bottom: 1px solid #eee;
-}
-
-.app-banner {
-    background-color: #f8f9fa;
-    padding: 0.5rem 1rem;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    background-color: #fff;
 }
 
 .hero-section {
     max-width: 1200px;
-    margin: 3rem auto;
+    margin: 1rem auto;
     text-align: center;
     padding: 0 1rem;
 }
 
 .hero-logo {
-    width: 80px;
-    margin-bottom: 1rem;
+    height: 90px;
+    width: auto;
+    margin-bottom: 0.5rem;
+    margin-top: 1rem;
+    object-fit: contain;
 }
 
 .tabs {
     display: flex;
     justify-content: center;
     gap: 1rem;
-    margin: 2rem 0;
+    margin: 1rem 0;
 }
 
 .tab {
@@ -77,10 +72,11 @@ body {
 
 .upload-box {
     max-width: 800px;
+    width: 70%;
     margin: 2rem auto;
     border: 2px dashed #ccc;
     border-radius: 8px;
-    padding: 2rem;
+    padding: 1.5rem;
 }
 
 .input-container {
@@ -123,27 +119,37 @@ body {
 
 /* Logo 样式 */
 .logo {
-    height: 40px;
-    width: auto;
+    height: 31.5px;
+    margin: -0.5rem 0;
+    margin-left: 0.5rem;
+    display: inline-block;
+    vertical-align: middle;
+    object-fit: contain;
 }
 
 .hero-section h1 {
+    margin-top: 0.5rem;
     font-size: 2.8rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.75rem;
     color: #1a1a1a;
     line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
 }
 
 .hero-section .highlight {
     color: var(--primary-color) !important;
-    display: block !important;
-    margin-bottom: -0.2rem !important;
+    display: inline;
+    line-height: 1;
+    vertical-align: middle;
 }
 
-.hero-section h1 br + span {
-    font-size: 2.4rem;
-    color: #333;
+.hero-section p {
+    color: #666;
+    margin-top: 1rem;
 }
 
 footer {
@@ -370,6 +376,7 @@ footer {
     height: 28px;
     fill: white;
     pointer-events: none;
+    transform: rotate(-90deg);
 }
 
 .send-btn:hover {
@@ -378,11 +385,12 @@ footer {
 
 .chat-container {
     margin-bottom: 1rem;
-    max-height: 400px;
+    max-height: 300px;
     overflow-y: auto;
     border: none;
     border-radius: 8px;
     padding: 0;
+    width: 100%;
 }
 
 .message {
@@ -403,4 +411,144 @@ footer {
     margin-right: auto;
     margin-left: 0;
     max-width: 80%;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.1rem 0;
+}
+
+.menu-btn {
+    padding: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 28px;
+    color: #333;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.upload-area {
+    text-align: center;
+    padding: 0.975rem;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.upload-area:hover {
+    border-color: var(--primary-color);
+    background-color: #f8f9fa;
+}
+
+.upload-area:hover .upload-icon {
+    opacity: 1;
+}
+
+.upload-icon {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 0.65rem;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.upload-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.upload-link:hover {
+    text-decoration: underline;
+}
+
+.uploaded-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.message-text {
+    margin-top: 0.5rem;
+}
+
+.preview-area {
+    max-width: 800px;
+    width: 70%;
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    position: relative;
+}
+
+.preview-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+}
+
+#preview-image {
+    max-width: 100px;
+    max-height: 100px;
+    border-radius: 4px;
+    object-fit: contain;
+}
+
+.change-file-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.remove-file-btn {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+.change-file-btn:hover {
+    background-color: #1976D2;
+}
+
+.remove-file-btn:hover {
+    color: #333;
+}
+
+.upload-area p {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* 固定页头 */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 为固定页头腾出空间 */
+main {
+    margin-top: 60px;  /* 根据页头高度调整 */
 } 

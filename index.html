@@ -21,30 +21,17 @@
         <nav class="navbar">
             <div class="nav-left">
                 <button class="menu-btn">☰</button>
-                <img src="images/logo.svg" alt="MathGPT" class="logo">
-            </div>
-            <div class="nav-center">
-                <div class="app-banner">
-                    <span>📱 MathGPT Mobile App Launch: PocketMath</span>
-                    <button class="download-btn">
-                        <img src="qr-code.svg" alt="QR">
-                        Scan to download
-                    </button>
-                    <button class="close-btn">×</button>
-                </div>
+                <img src="images/logo.png" alt="MathGPT AI" class="logo">
             </div>
             <div class="nav-right">
-                <a href="#" class="social-link">TikTok</a>
-                <a href="#" class="social-link">Discord</a>
-                <button class="upgrade-btn">Get MathGPT Unlimited</button>
             </div>
         </nav>
     </header>
 
     <main>
         <div class="hero-section">
-            <img src="math-logo.svg" alt="MathGPT Logo" class="hero-logo">
-            <h1><span class="highlight">MathGPT</span><br> your best learning assistant</h1>
+            <img src="images/logo.png" alt="MathGPT AI" class="hero-logo">
+            <h1><span class="highlight">MathGPT</span> your best learning assistant</h1>
             <p>Get instant homework help from your personal AI math solver</p>
             
             <div class="tabs">
@@ -54,10 +41,19 @@
                 <button class="tab">ChemGPT</button>
             </div>
 
+            <div class="preview-area" style="display: none;">
+                <div class="preview-container">
+                    <img id="preview-image" src="" alt="Preview">
+                    <button class="change-file-btn">Change file</button>
+                    <button class="remove-file-btn">×</button>
+                </div>
+            </div>
+
             <div class="upload-box">
                 <div class="upload-area">
-                    <img src="upload-icon.svg" alt="Upload">
-                    <p>Drag & drop or <a href="#">click here</a> to upload an image or PDF</p>
+                    <img src="images/upload-icon.svg" alt="Upload" class="upload-icon">
+                    <p>Drop your files here or <a href="#" class="upload-link">click</a> to upload, whether it's an image or a PDF</p>
+                    <input type="file" id="fileInput" accept=".pdf,image/*" style="display: none;">
                 </div>
                 <div class="chat-container">
                     <!-- 对话内容会动态添加到这里 -->
@@ -66,7 +62,7 @@
                     <input type="text" placeholder="Type your question here..." class="question-input">
                     <button class="send-btn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/>
+                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
                         </svg>
                     </button>
                 </div>
@@ -231,6 +227,50 @@
             const questionInput = document.querySelector('.question-input');
             const sendButton = document.querySelector('.send-btn');
             const chatContainer = document.querySelector('.chat-container');
+            const fileInput = document.getElementById('fileInput');
+            const uploadLink = document.querySelector('.upload-link');
+            const previewArea = document.querySelector('.preview-area');
+            const previewImage = document.getElementById('preview-image');
+            const changeFileBtn = document.querySelector('.change-file-btn');
+            const removeFileBtn = document.querySelector('.remove-file-btn');
+            
+            // 处理点击上传链接
+            uploadLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                fileInput.click();
+            });
+            
+            let selectedFile = null;  // 存储选中的文件
+            
+            // 处理文件选择
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    if (file.type.startsWith('image/') || file.type === 'application/pdf') {
+                        selectedFile = file;
+                        if (file.type.startsWith('image/')) {
+                            previewImage.src = URL.createObjectURL(file);
+                            previewArea.style.display = 'block';
+                        }
+                    } else {
+                        addMessage('Please select an image or PDF file.', false);
+                        selectedFile = null;
+                        previewArea.style.display = 'none';
+                    }
+                }
+            });
+            
+            // 处理更换文件
+            changeFileBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            // 处理移除文件
+            removeFileBtn.addEventListener('click', function() {
+                selectedFile = null;
+                previewArea.style.display = 'none';
+                previewImage.src = '';
+            });
             
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
@@ -249,8 +289,33 @@
 
             function handleSend() {
                 const question = questionInput.value.trim();
-                if (question) {
-                    addMessage(question, true);
+                if (question || selectedFile) {
+                    if (selectedFile) {
+                        // 创建一个包含文件预览的消息
+                        const messageDiv = document.createElement('div');
+                        messageDiv.className = 'message user-message';
+                        
+                        if (selectedFile.type.startsWith('image/')) {
+                            const img = document.createElement('img');
+                            img.src = URL.createObjectURL(selectedFile);
+                            img.className = 'uploaded-image';
+                            messageDiv.appendChild(img);
+                        } else {
+                            messageDiv.textContent = `[PDF File: ${selectedFile.name}]`;
+                        }
+                        
+                        if (question) {
+                            const textDiv = document.createElement('div');
+                            textDiv.textContent = question;
+                            textDiv.className = 'message-text';
+                            messageDiv.appendChild(textDiv);
+                        }
+                        
+                        chatContainer.appendChild(messageDiv);
+                        selectedFile = null;  // 清除已发送的文件
+                    } else {
+                        addMessage(question, true);
+                    }
                     
                     questionInput.value = '';
                     
