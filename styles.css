@@ -38,6 +38,7 @@ body {
     margin-bottom: 0.5rem;
     margin-top: 1rem;
     object-fit: contain;
+    max-width: 100%;
 }
 
 .tabs {
@@ -125,6 +126,7 @@ body {
     display: inline-block;
     vertical-align: middle;
     object-fit: contain;
+    max-width: 100%;
 }
 
 .hero-section h1 {
@@ -513,6 +515,7 @@ footer {
     margin-bottom: 0.65rem;
     opacity: 0.7;
     transition: opacity 0.3s ease;
+    max-width: 100%;
 }
 
 .upload-link {
