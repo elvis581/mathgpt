@@ -20,6 +20,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 </head>
 <body>
+    <!-- 图片模态框 -->
+    <div id="imageModal" class="modal">
+        <span class="modal-close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
     <header>
         <nav class="navbar">
             <div class="nav-left">
@@ -395,45 +401,47 @@
                     let imageUrl = null;
                     if (selectedFile) {
                         if (selectedFile.type.startsWith('image/')) {
-                            // 如果需要，先上传图片到服务器获取 URL
-                            imageUrl = URL.createObjectURL(selectedFile);
-                        }
-                        
-                        // 创建一个包含文件预览的消息
-                        const messageDiv = document.createElement('div');
-                        messageDiv.className = 'message user-message';
-                        
-                        if (selectedFile.type.startsWith('image/')) {
+                            const messageDiv = document.createElement('div');
+                            messageDiv.className = 'message user-message';
+                            
                             const img = document.createElement('img');
                             img.src = URL.createObjectURL(selectedFile);
                             img.className = 'uploaded-image';
+                            
+                            const modal = document.getElementById('imageModal');
+                            const modalImg = document.getElementById('modalImage');
+                            
+                            img.onclick = function() {
+                                if (modal && modalImg) {
+                                    modal.style.display = "block";
+                                    modalImg.src = this.src;
+                                }
+                            };
                             messageDiv.appendChild(img);
-                        } else {
-                            messageDiv.textContent = `[PDF File: ${selectedFile.name}]`;
                         }
-                        
-                        if (question) {
-                            const textDiv = document.createElement('div');
-                            textDiv.textContent = question;
-                            textDiv.className = 'message-text';
-                            messageDiv.appendChild(textDiv);
-                        }
-                        
-                        chatContainer.appendChild(messageDiv);
-                    } else {
-                        addMessage(question, true);
                     }
                     
-                    questionInput.value = '';
+                    if (question) {
+                        const textDiv = document.createElement('div');
+                        textDiv.textContent = question;
+                        textDiv.className = 'message-text';
+                        messageDiv.appendChild(textDiv);
+                    }
                     
-                    const loadingMessage = addMessage('Thinking...', false, true);
-                    
-                    // 发送到 GPT 并获取响应
-                    const response = await sendToGPT(question, imageUrl);
-                    console.log('Got response:', response);
-                    loadingMessage.remove();
-                    addMessage(response);
+                    chatContainer.appendChild(messageDiv);
+                } else {
+                    addMessage(question, true);
                 }
+                
+                questionInput.value = '';
+                
+                const loadingMessage = addMessage('Thinking...', false, true);
+                
+                // 发送到 GPT 并获取响应
+                const response = await sendToGPT(question, imageUrl);
+                console.log('Got response:', response);
+                loadingMessage.remove();
+                addMessage(response);
             }
 
             sendButton.addEventListener('click', handleSend);
@@ -452,6 +460,40 @@
                     // this.src = '/MathGPT/images/default.png';
                 };
             });
+
+            // 初始化模态框功能
+            function initializeModal() {
+                const modal = document.getElementById('imageModal');
+                const modalImg = document.getElementById('modalImage');
+                const closeBtn = document.querySelector('.modal-close');
+                
+                if (modal && modalImg && closeBtn) {
+                    // 关闭模态框
+                    function closeModal() {
+                        modal.style.display = "none";
+                    }
+                    
+                    // 点击关闭按钮关闭模态框
+                    closeBtn.onclick = closeModal;
+                    
+                    // 点击模态框背景关闭
+                    modal.onclick = function(e) {
+                        if (e.target === modal) {
+                            closeModal();
+                        }
+                    };
+                    
+                    // ESC键关闭模态框
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            closeModal();
+                        }
+                    });
+                }
+            }
+            
+            // 在页面加载完成后初始化模态框
+            document.addEventListener('DOMContentLoaded', initializeModal);
         });
     </script>
     <div style="display:none">
