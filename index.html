@@ -30,6 +30,7 @@
         <nav class="navbar">
             <div class="nav-left">
                 <button class="menu-btn">☰</button>
+                <img src="https://raw.githubusercontent.com/elvis581/mathgpt/main/images/logo.png" alt="MathGPT AI" class="logo" id="navLogo">
             </div>
         </nav>
     </header>
@@ -75,7 +76,7 @@
                         </div>
                     </div>
                     <div class="upload-area">
-                        <img src="./images/upload-icon.svg" alt="Upload" class="upload-icon">
+                        <img src="https://raw.githubusercontent.com/elvis581/mathgpt/main/images/upload-icon.svg" alt="Upload" class="upload-icon">
                         <p>Drop your files here or <a href="#" class="upload-link">click</a> to upload</p>
                         <input type="file" id="fileInput" accept=".pdf,image/*" style="display: none;">
                     </div>
@@ -493,8 +494,10 @@
             document.querySelectorAll('img').forEach(img => {
                 img.onerror = function() {
                     console.error('Image failed to load:', this.src);
-                    // 可以设置一个默认图片
-                    // this.src = '/MathGPT/images/default.png';
+                    // 使用备用图片
+                    if (this.src.includes('upload-icon.svg')) {
+                        this.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNOSAxNmgydi0ySDl2MnptMy00aDJ2LTJoLTJ2MnptMCA0aDJ2LTJoLTJ2MnptMyA0SDVjLTEuMSAwLTItLjktMi0yVjVjMC0xLjEuOS0yIDItMmgxNGMxLjEgMCAyIC45IDIgMnYxNGMwIDEuMS0uOSAyLTIgMnpNNSA1djE0aDE0VjVINXoiLz48L3N2Zz4=';
+                    }
                 };
             });
 
