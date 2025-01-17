@@ -93,6 +93,7 @@ body {
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
+    order: 2;
 }
 
 .question-wrapper {
@@ -420,6 +421,7 @@ footer {
     align-items: flex-start;
     scrollbar-width: none;  /* Firefox */
     -ms-overflow-style: none;  /* Internet Explorer/Edge */
+    order: 1;
 }
 
 /* 隐藏 Webkit 浏览器的滚动条 (Chrome, Safari) */

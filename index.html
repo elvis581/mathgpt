@@ -65,6 +65,9 @@
             </div>
 
             <div class="upload-box">
+                <div class="chat-container">
+                    <!-- 对话内容会动态添加到这里 -->
+                </div>
                 <div class="input-container">
                     <div class="upload-area">
                         <img src="https://raw.githubusercontent.com/elvis581/mathgpt/main/images/upload-icon.svg" alt="Upload" class="upload-icon">
@@ -85,9 +88,6 @@
                             </svg>
                         </button>
                     </div>
-                </div>
-                <div class="chat-container">
-                    <!-- 对话内容会动态添加到这里 -->
                 </div>
             </div>
         </div>
@@ -317,6 +317,10 @@
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'} ${isLoading ? 'loading' : ''}`;
                 
+                // 获取聊天容器和输入容器
+                const chatContainer = document.querySelector('.chat-container');
+                const inputContainer = document.querySelector('.input-container');
+                
                 if (isUser) {
                     messageDiv.textContent = content;
                 } else {
@@ -342,7 +346,8 @@
                         messageDiv.textContent = content;
                     }
                 }
-                chatContainer.appendChild(messageDiv);
+                // 插入到输入框上方
+                chatContainer.insertBefore(messageDiv, null);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
                 return messageDiv;
             }
