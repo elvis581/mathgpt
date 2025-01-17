@@ -106,7 +106,7 @@ body {
 
 .question-input {
     width: 100%;
-    padding: 1rem 3rem 1rem 1rem;
+    padding-right: 3rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     height: 48px;
@@ -392,6 +392,7 @@ footer {
     height: 36px;
     border: none;
     cursor: pointer;
+    z-index: 1;
 }
 
 .send-btn svg {
@@ -1081,4 +1082,19 @@ main {
     width: calc(100% - 300px);
     max-width: none;
     transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+.focus-mode .question-wrapper {
+    position: relative;
+}
+
+.focus-mode .question-input {
+    padding-right: 3rem;
+}
+
+.focus-mode .send-btn {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
 } 
