@@ -80,8 +80,12 @@ body {
     padding: 1.5rem;
     position: relative;
     z-index: 1000;
+    display: -webkit-flex;
+    display: -moz-flex;
     display: flex;
-    flex-direction: column;
+    -webkit-flex-direction: column-reverse;
+    -moz-flex-direction: column-reverse;
+    flex-direction: column-reverse;
 }
 
 .input-container {
@@ -809,25 +813,19 @@ main {
     margin-left: 300px;
     width: calc(100% - 300px);
     max-width: none;
-    display: -webkit-flex;
-    display: -moz-flex;
     display: flex;
-    -webkit-flex-direction: column;
-    -moz-flex-direction: column;
-    flex-direction: column;
-    -webkit-transition: margin-left 0.3s ease, width 0.3s ease;
-    -moz-transition: margin-left 0.3s ease, width 0.3s ease;
+    flex-direction: column-reverse;
     transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
 .focus-mode .chat-container {
-    order: 1;
+    order: 2;
     flex: 1;
     margin-bottom: 1rem;
 }
 
 .focus-mode .input-container {
-    order: 2;
+    order: 1;
     margin-top: auto;
 }
 
