@@ -80,11 +80,7 @@ body {
     padding: 1.5rem;
     position: relative;
     z-index: 1000;
-    display: -webkit-flex;
-    display: -moz-flex;
     display: flex;
-    -webkit-flex-direction: column-reverse;
-    -moz-flex-direction: column-reverse;
     flex-direction: column-reverse;
 }
 
