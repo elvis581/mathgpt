@@ -30,12 +30,26 @@
         <nav class="navbar">
             <div class="nav-left">
                 <button class="menu-btn">☰</button>
-                <img src="./images/logo.png" alt="MathGPT AI" class="logo">
-            </div>
-            <div class="nav-right">
+                <img src="./images/logo.png" alt="MathGPT AI" class="logo" id="navLogo">
             </div>
         </nav>
     </header>
+
+    <!-- 侧边栏对话历史 -->
+    <div class="chat-sidebar">
+        <div class="sidebar-header">
+            <h3>Chat History</h3>
+            <button class="new-chat-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                </svg>
+                New Chat
+            </button>
+        </div>
+        <div class="chat-history">
+            <!-- 对话历史列表会动态添加到这里 -->
+        </div>
+    </div>
 
     <main>
         <div class="hero-section">
@@ -50,30 +64,30 @@
                 <button class="tab">ChemGPT</button>
             </div>
 
-            <div class="preview-area" style="display: none;">
-                <div class="preview-container">
-                    <img id="preview-image" src="" alt="Preview">
-                    <button class="change-file-btn">Change file</button>
-                    <button class="remove-file-btn">×</button>
-                </div>
-            </div>
-
             <div class="upload-box">
-                <div class="upload-area">
-                    <img src="./images/upload-icon.svg" alt="Upload" class="upload-icon">
-                    <p>Drop your files here or <a href="#" class="upload-link">click</a> to upload, whether it's an image or a PDF</p>
-                    <input type="file" id="fileInput" accept=".pdf,image/*" style="display: none;">
-                </div>
                 <div class="chat-container">
                     <!-- 对话内容会动态添加到这里 -->
                 </div>
                 <div class="input-container">
-                    <input type="text" placeholder="Type your question here..." class="question-input">
-                    <button class="send-btn">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-                        </svg>
-                    </button>
+                    <div class="preview-area" style="display: none;">
+                        <div class="preview-container">
+                            <img id="preview-image" src="" alt="Preview">
+                            <button class="remove-file-btn">×</button>
+                        </div>
+                    </div>
+                    <div class="upload-area">
+                        <img src="./images/upload-icon.svg" alt="Upload" class="upload-icon">
+                        <p>Drop your files here or <a href="#" class="upload-link">click</a> to upload</p>
+                        <input type="file" id="fileInput" accept=".pdf,image/*" style="display: none;">
+                    </div>
+                    <div class="question-wrapper">
+                        <input type="text" placeholder="Type your question here..." class="question-input">
+                        <button class="send-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -240,15 +254,24 @@
             const chatContainer = document.querySelector('.chat-container');
             const fileInput = document.getElementById('fileInput');
             const uploadLink = document.querySelector('.upload-link');
-            const previewArea = document.querySelector('.preview-area');
+            const previewArea = document.querySelector('.input-container .preview-area');
             const previewImage = document.getElementById('preview-image');
-            const changeFileBtn = document.querySelector('.change-file-btn');
             const removeFileBtn = document.querySelector('.remove-file-btn');
             
-            // 处理点击上传链接
+            // 处理上传链接点击
             uploadLink.addEventListener('click', function(e) {
                 e.preventDefault();
                 fileInput.click();
+            });
+            
+            // 处理上传区域点击
+            const uploadArea = document.querySelector('.upload-area');
+            uploadArea.addEventListener('click', function(e) {
+                // 如果点击的不是链接和移除按钮
+                if (!e.target.classList.contains('upload-link') && 
+                    !e.target.classList.contains('remove-file-btn')) {
+                    fileInput.click();
+                }
             });
             
             let selectedFile = null;  // 存储选中的文件
@@ -261,26 +284,26 @@
                         selectedFile = file;
                         if (file.type.startsWith('image/')) {
                             previewImage.src = URL.createObjectURL(file);
-                            previewArea.style.display = 'block';
+                            document.querySelector('.input-container .preview-area').style.display = 'block';
+                            if (document.body.classList.contains('focus-mode')) {
+                                document.querySelector('.input-container .preview-area').style.opacity = '1';
+                                document.querySelector('.input-container .preview-area').style.visibility = 'visible';
+                            }
                         }
                     } else {
                         addMessage('Please select an image or PDF file.', false);
                         selectedFile = null;
-                        previewArea.style.display = 'none';
+                        document.querySelector('.input-container .preview-area').style.display = 'none';
                     }
                 }
-            });
-            
-            // 处理更换文件
-            changeFileBtn.addEventListener('click', function() {
-                fileInput.click();
             });
             
             // 处理移除文件
             removeFileBtn.addEventListener('click', function() {
                 selectedFile = null;
-                previewArea.style.display = 'none';
+                document.querySelector('.input-container .preview-area').style.display = 'none';
                 previewImage.src = '';
+                fileInput.value = '';
             });
             
             tabs.forEach(tab => {
@@ -397,51 +420,66 @@
             async function handleSend() {
                 const question = questionInput.value.trim();
                 if (question || selectedFile) {
-                    console.log('Handling send...', { question, hasFile: !!selectedFile });
-                    let imageUrl = null;
+                    // 立即隐藏预览区域和清除预览图片
+                    const previewArea = document.querySelector('.input-container .preview-area');
+                    if (previewArea) {
+                        previewArea.style.display = 'none';
+                        previewImage.src = '';
+                    }
+                    
+                    // 进入专注模式
+                    document.body.classList.add('focus-mode');
+                    
                     if (selectedFile) {
                         if (selectedFile.type.startsWith('image/')) {
+                            // 创建图片消息
                             const messageDiv = document.createElement('div');
                             messageDiv.className = 'message user-message';
                             
+                            // 添加图片
                             const img = document.createElement('img');
                             img.src = URL.createObjectURL(selectedFile);
                             img.className = 'uploaded-image';
-                            
-                            const modal = document.getElementById('imageModal');
-                            const modalImg = document.getElementById('modalImage');
-                            
-                            img.onclick = function() {
-                                if (modal && modalImg) {
-                                    modal.style.display = "block";
-                                    modalImg.src = this.src;
-                                }
-                            };
                             messageDiv.appendChild(img);
+                            
+                            // 如果有问题文本，添加到图片下方
+                            if (question) {
+                                const textDiv = document.createElement('div');
+                                textDiv.textContent = question;
+                                textDiv.className = 'message-text';
+                                messageDiv.appendChild(textDiv);
+                            }
+                            
+                            // 添加消息到聊天容器
+                            chatContainer.appendChild(messageDiv);
+                        }
+                    } else if (question) {
+                        addMessage(question, true);
+                    }
+                    
+                    const loadingMessage = addMessage('Thinking...', false, true);
+                    
+                    // 清除选中的文件
+                    selectedFile = null;
+                    
+                    // 发送到 GPT 并获取响应
+                    const response = await sendToGPT(question, selectedFile ? URL.createObjectURL(selectedFile) : null);
+                    console.log('Got response:', response);
+                    loadingMessage.remove();
+                    addMessage(response);
+                    
+                    // 更新当前对话的标题
+                    const currentChat = document.querySelector('.chat-item.active');
+                    if (currentChat) {
+                        const title = extractChatTitle(question);
+                        const titleElement = currentChat.querySelector('svg').nextSibling;
+                        if (titleElement) {
+                            titleElement.textContent = ' ' + title;
                         }
                     }
-                    
-                    if (question) {
-                        const textDiv = document.createElement('div');
-                        textDiv.textContent = question;
-                        textDiv.className = 'message-text';
-                        messageDiv.appendChild(textDiv);
-                    }
-                    
-                    chatContainer.appendChild(messageDiv);
-                } else {
-                    addMessage(question, true);
                 }
                 
                 questionInput.value = '';
-                
-                const loadingMessage = addMessage('Thinking...', false, true);
-                
-                // 发送到 GPT 并获取响应
-                const response = await sendToGPT(question, imageUrl);
-                console.log('Got response:', response);
-                loadingMessage.remove();
-                addMessage(response);
             }
 
             sendButton.addEventListener('click', handleSend);
@@ -494,6 +532,139 @@
             
             // 在页面加载完成后初始化模态框
             document.addEventListener('DOMContentLoaded', initializeModal);
+
+            // 添加退出专注模式的按钮
+            const exitFocusBtn = document.createElement('button');
+            exitFocusBtn.className = 'exit-focus-btn';
+            exitFocusBtn.innerHTML = 'Exit Focus Mode';
+            exitFocusBtn.style.display = 'none';
+            document.querySelector('.upload-box').appendChild(exitFocusBtn);
+            
+            exitFocusBtn.addEventListener('click', () => {
+                document.body.classList.remove('focus-mode');
+                exitFocusBtn.style.display = 'none';
+            });
+            
+            // 当进入专注模式时显示退出按钮
+            document.body.addEventListener('classChange', () => {
+                if (document.body.classList.contains('focus-mode')) {
+                    exitFocusBtn.style.display = 'block';
+                }
+            });
+
+            // 添加新对话按钮处理
+            const newChatBtn = document.querySelector('.new-chat-btn');
+            const chatHistory = document.querySelector('.chat-history');
+            
+            // 页面加载时创建第一个对话
+            function createInitialChat() {
+                const firstChat = document.createElement('div');
+                firstChat.className = 'chat-item active';
+                firstChat.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    New Conversation
+                `;
+                firstChat.dataset.content = '';
+                
+                firstChat.addEventListener('click', () => {
+                    const currentChat = document.querySelector('.chat-item.active');
+                    if (currentChat) {
+                        currentChat.dataset.content = chatContainer.innerHTML;
+                    }
+                    
+                    chatContainer.innerHTML = firstChat.dataset.content;
+                    document.querySelectorAll('.chat-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    firstChat.classList.add('active');
+                });
+                
+                chatHistory.appendChild(firstChat);
+            }
+            
+            // 初始化第一个对话
+            createInitialChat();
+
+            // 从对话内容中提取主题
+            function extractChatTitle(content) {
+                if (!content) return 'New Conversation';
+                
+                // 清理内容中的HTML标签
+                const cleanContent = content.replace(/<[^>]*>/g, '').trim();
+                
+                // 提取前20个字符作为标题
+                const title = cleanContent.length > 17 ? cleanContent.slice(0, 17) + '...' : cleanContent;
+                return title || 'New Conversation';
+            }
+
+            // 新对话按钮处理
+            newChatBtn.addEventListener('click', () => {
+                // 保存当前对话内容并更新标题
+                const currentChat = document.querySelector('.chat-item.active');
+                if (currentChat) {
+                    currentChat.dataset.content = chatContainer.innerHTML;
+                    // 更新当前对话的标题
+                    const title = extractChatTitle(chatContainer.innerHTML);
+                    const titleElement = currentChat.querySelector('svg').nextSibling;
+                    titleElement.textContent = title;
+                }
+                
+                // 创建新的对话
+                const newChat = document.createElement('div');
+                newChat.className = 'chat-item';
+                newChat.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24">
+                        <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/>
+                    </svg>
+                    New Conversation
+                `;
+                newChat.dataset.content = '';
+                
+                newChat.addEventListener('click', () => {
+                    const currentChat = document.querySelector('.chat-item.active');
+                    if (currentChat) {
+                        currentChat.dataset.content = chatContainer.innerHTML;
+                    }
+                    
+                    chatContainer.innerHTML = newChat.dataset.content;
+                    document.querySelectorAll('.chat-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    newChat.classList.add('active');
+                });
+                
+                chatHistory.appendChild(newChat);
+                
+                // 清空当前对话并激活新对话
+                chatContainer.innerHTML = '';
+                questionInput.value = '';
+                document.querySelectorAll('.chat-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                newChat.classList.add('active');
+                
+                // 进入专注模式
+                document.body.classList.add('focus-mode');
+            });
+
+            // 处理导航栏 LOGO 点击
+            const navLogo = document.getElementById('navLogo');
+            navLogo.addEventListener('click', function() {
+                // 如果在专注模式，退出专注模式
+                if (document.body.classList.contains('focus-mode')) {
+                    document.body.classList.remove('focus-mode');
+                    // 清空聊天容器
+                    chatContainer.innerHTML = '';
+                    // 清空输入框
+                    questionInput.value = '';
+                    // 隐藏预览区域
+                    document.querySelector('.input-container .preview-area').style.display = 'none';
+                }
+                // 滚动到页面顶部
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
         });
     </script>
     <div style="display:none">
