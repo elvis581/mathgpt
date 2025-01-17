@@ -80,6 +80,8 @@ body {
     padding: 1.5rem;
     position: relative;
     z-index: 1000;
+    display: flex;
+    flex-direction: column;
 }
 
 .input-container {
@@ -99,6 +101,7 @@ body {
     gap: 1rem;
     width: 100%;
     margin-top: 0;
+    position: relative;
 }
 
 .question-input {
@@ -387,13 +390,14 @@ footer {
     border-radius: 4px;
     width: 36px;
     height: 36px;
+    border: none;
+    cursor: pointer;
 }
 
 .send-btn svg {
-    width: 28px;
-    height: 28px;
+    width: 20px;
+    height: 20px;
     fill: white;
-    pointer-events: none;
     transform: rotate(-90deg);
 }
 
@@ -515,13 +519,13 @@ footer {
 
 .upload-area {
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
     border: 2px dashed #ccc;
     border-radius: 8px;
     margin: 0;
     background-color: #fafafa;
     transition: all 0.3s ease;
-    min-height: 120px;
+    min-height: 60px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -538,8 +542,8 @@ footer {
 }
 
 .upload-icon {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     margin-bottom: 0.65rem;
     opacity: 0.7;
     transition: opacity 0.3s ease;
@@ -638,6 +642,7 @@ footer {
 .upload-area p {
     font-size: 0.9rem;
     line-height: 1.4;
+    margin: 0;
 }
 
 /* 固定页头 */
@@ -801,15 +806,35 @@ main {
 }
 
 .focus-mode .upload-box {
-    margin-top: 1rem;
-    transition: all 0.3s ease;
+    margin-left: 300px;
+    width: calc(100% - 300px);
+    max-width: none;
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    -moz-flex-direction: column;
+    flex-direction: column;
+    -webkit-transition: margin-left 0.3s ease, width 0.3s ease;
+    -moz-transition: margin-left 0.3s ease, width 0.3s ease;
+    transition: margin-left 0.3s ease, width 0.3s ease;
 }
 
 .focus-mode .chat-container {
-    max-height: 70vh;
-    transition: max-height 0.3s ease;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    order: 1;
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.focus-mode .input-container {
+    order: 2;
+    margin-top: auto;
+}
+
+.focus-mode .question-input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1rem 3rem 1rem 1rem;
 }
 
 .exit-focus-btn {
